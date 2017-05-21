@@ -1,0 +1,43 @@
+{
+  "name": "firebase-hackernews",
+  "version": "0.0.0",
+  "description": "Hacker News APIs with firebase",
+  "license": "MIT",
+  "repository": "ragingwind/firebase-hackernews",
+  "author": {
+    "name": "ragingwind",
+    "email": "ragingwind@gmail.com",
+    "url": "ragingwind.me"
+  },
+  "engines": {
+    "node": ">=4"
+  },
+  "scripts": {
+    "test": "xo *.js && ava test.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "firebase",
+    "hacker",
+    "news",
+    "hackernews",
+    "hnpwa"
+  ],
+  "dependencies": {
+    "firebase": "^3.9.0",
+    "isomorphic-unfetch": "^1.0.0"
+  },
+  "devDependencies": {
+    "ava": "^0.17.0",
+    "express": "^4.15.3",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "xo": "^0.17.0"
+  },
+  "xo": {
+    "semicolon": false,
+    "globals": ["window", "performance"]
+  }
+}
