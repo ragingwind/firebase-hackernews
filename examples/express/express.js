@@ -42,8 +42,6 @@ app.get('/updates', (req, res) => {
 
 app.use('/hackernews', express.static(path.join(path.resolve(__dirname, '../'))))
 
-app.use('/app', express.static(path.join(__dirname)))
-
 Promise.resolve(watchmode && news.watch()).then(() => {
 	app.listen(3000, () => {
 		console.log(`server has started with ${watchmode ? 'watch' : 'fetch'} mode`)
