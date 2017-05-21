@@ -10,6 +10,7 @@ const watchmode = process.argv.includes('--watch')
 const index = `
 <ul>
 	<li><a href="/stories/top">top</a></li>
+	<li><a href="/stories/top?page=1&count=1">top at page 1</a></li>
 	<li><a href="/stories/new">new</a></li>
 	<li><a href="/stories/best">best</a></li>
 	<li><a href="/stories/ask">ask</a></li>
@@ -25,7 +26,11 @@ app.get('/', (req, res) => {
 })
 
 app.get('/stories/:type', (req, res) => {
-	news.stories(req.params.type).then(data => res.send(data))
+	console.log(req.query);
+	news.stories(req.params.type, {
+		page: req.query.page,
+		count: req.query.count
+	}).then(data => res.send(data))
 })
 
 app.get('/users/:id', (req, res) => {
