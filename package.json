@@ -1,6 +1,6 @@
 {
   "name": "firebase-hackernews",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Hacker News APIs with firebase",
   "license": "MIT",
   "repository": "ragingwind/firebase-hackernews",
@@ -38,6 +38,9 @@
   },
   "xo": {
     "semicolon": false,
-    "globals": ["window", "performance"]
+    "globals": [
+      "window",
+      "performance"
+    ]
   }
 }
