@@ -48,7 +48,8 @@ app.get('/updates', (req, res) => {
 app.use('/hackernews', express.static(path.join(path.resolve(__dirname, '../'))))
 
 Promise.resolve(watchmode && news.watch()).then(() => {
-	app.listen(3000, () => {
-		console.log(`server has started with ${watchmode ? 'watch' : 'fetch'} mode`)
+	const PORT = 9000
+	app.listen(PORT, () => {
+		console.log(`server has started with ${watchmode ? 'watch' : 'fetch'} mode. oprn http://localhost:${PORT}`)
 	})
 })
