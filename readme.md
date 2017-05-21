@@ -60,7 +60,7 @@ Returns recent updates regardless fetched data
 
 Returnes max item id of latest snapshot on firebase
 
-## watch()
+### watch()
 
 Make the service keep listening on the changes of stories. It recommend to use it for desktop application and server side. refer to [the example with express.js](./examples/express)
 
