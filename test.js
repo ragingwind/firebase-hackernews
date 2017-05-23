@@ -2,10 +2,9 @@ import test from 'ava'
 import hackernews from './'
 
 test('stroies', async t => {
-	var news = hackernews()
 	await Promise.all(['top', 'new', 'best', 'ask', 'show', 'job'].map(type => {
 		return new Promise(async resolve => {
-			const res = await news.stories(type)
+			const res = await hackernews().stories(type)
 			t.true(res.length > 0, 'returns resultful value')
 			resolve()
 		})
@@ -13,10 +12,9 @@ test('stroies', async t => {
 })
 
 test('count of default', async t => {
-	var news = hackernews()
 	await Promise.all(['top', 'new', 'best', 'ask', 'show', 'job'].map(type => {
 		return new Promise(async resolve => {
-			const res = await news.stories(type, {
+			const res = await hackernews().stories(type, {
 				page: 1
 			})
 			t.true(res.length > 0, 'returns resultful value')
@@ -26,10 +24,9 @@ test('count of default', async t => {
 })
 
 test('count of custom', async t => {
-	var news = hackernews()
 	await Promise.all(['top', 'new', 'best', 'ask', 'show', 'job'].map(type => {
 		return new Promise(async resolve => {
-			const res = await news.stories(type, {
+			const res = await hackernews().stories(type, {
 				page: 1,
 				count: 10
 			})
@@ -40,23 +37,27 @@ test('count of custom', async t => {
 })
 
 test('user', async t => {
-	var news = hackernews()
-	const user = await news.user('jl')
+	const user = await hackernews().user('jl')
 
 	t.true(user.about === 'This is a test')
 	t.true(user.id === 'jl')
 })
 
 test('maxitem', async t => {
-	var news = hackernews()
-	const maxItem = await news.maxItem()
+	const maxItem = await hackernews().maxItem()
 	t.true(maxItem > 0, 'returns resultful value')
 })
 
 test('updates', async t => {
-	var news = hackernews()
-	const res = await news.update()
+	const res = await hackernews().update()
 
 	t.true(res.items.length > 0)
 	t.true(res.profiles.length > 0)
+})
+
+test('length', async t => {
+	await hackernews().stories('top')
+	const length = await hackernews().length('top')
+
+	t.true(length > 0)
 })

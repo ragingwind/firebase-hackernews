@@ -15,23 +15,23 @@ See [more examples](./examples) in test.js and refer to [HackerNews API](https:/
 ```js
 const hackernews = require('firebase-hackernews');
 
-// create a service as a single instance
-const news = hackernews()
+// create a service as a single instance when the fist call
+const instance = hackernews()
 
 // get all of stories by types, 'top', 'new', 'best', 'ask', 'show', 'job'
-news.stories('top').then(stories => {})
+hackernews().stories('top').then(stories => {})
 
 // get stories with custom count and page
-news.stories('top', {page: 1, count: 30}).then(stories => {})
+hackernews().stories('top', {page: 1, count: 30}).then(stories => {})
 
 // get a user
-news.user('jl').then(user => {})
+hackernews().user('jl').then(user => {})
 
 // get a current max item id
-news.maxItem().then(update => {})
+hackernews().maxItem().then(update => {})
 
 // get a updated items and profiles
-news.update().then(update => {})
+hackernews().update().then(update => {})
 ```
 
 ## API
@@ -63,6 +63,10 @@ Returnes max item id of latest snapshot on firebase
 ### watch()
 
 Make the service keep listening on the changes of stories. It recommend to use it for desktop application and server side. refer to [the example with express.js](./examples/express)
+
+### length(type)
+
+Returns cached items of the type's data
 
 ## License
 

@@ -57,6 +57,14 @@ class HNFirebaseCache {
 		}
 		throw new Error(`Unsupported type ${type}`)
 	}
+
+	length(type) {
+		return new Promise(resolve => {
+			resolve(Array.isArray(this.data[type]) ?
+					this.data[type].length :
+					Object.keys(this.data[type]).length)
+		})
+	}
 }
 
 const STORIES = ['top', 'new', 'best', 'ask', 'show', 'job']
@@ -166,6 +174,10 @@ class HNFirebase {
 				})
 			})
 		})
+	}
+
+	length(type) {
+		return this._cache.length(type)
 	}
 }
 
