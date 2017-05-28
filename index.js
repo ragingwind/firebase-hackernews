@@ -29,24 +29,19 @@ class HNFirebaseCache {
 	}
 
 	set(type, val) {
-		return new Promise(resolve => {
-			if (Array.isArray(this.data[type])) {
-				this.data[type] = val
-			} else if (typeof this.data[type] === 'object') {
-				this.data[type] = Object.assign(val, this.data[type])
-			} else {
-				throw new Error(`Unsupported type ${type}`)
-			}
+		if (Array.isArray(this.data[type])) {
+			this.data[type] = val
+		} else if (typeof this.data[type] === 'object') {
+			this.data[type] = Object.assign(val, this.data[type])
+		} else {
+			throw new Error(`Unsupported type ${type}`)
+		}
 
-			this.touch(type)
-			resolve()
-		})
+		this.touch(type)
 	}
 
 	get(type) {
-		return new Promise(resolve => {
-			resolve(this.data[type])
-		})
+		return this.data[type]
 	}
 
 	exist(type) {
@@ -59,11 +54,9 @@ class HNFirebaseCache {
 	}
 
 	length(type) {
-		return new Promise(resolve => {
-			resolve(Array.isArray(this.data[type]) ?
-					this.data[type].length :
-					Object.keys(this.data[type]).length)
-		})
+		return Array.isArray(this.data[type]) ?
+			this.data[type].length :
+			Object.keys(this.data[type]).length
 	}
 }
 
@@ -78,11 +71,11 @@ class HNFirebase {
 	}
 
 	_getItems(type, opts) {
-		return this._cache.get(type).then(ids => {
-			const begin = opts.page > 0 ? (opts.page - 1) * opts.count : 0
-			const end = opts.page > 0 ? begin + opts.count : ids.length
-			return this.items(ids.slice(begin, end))
-		})
+		const ids = this._cache.get(type)
+		const begin = opts.page > 0 ? (opts.page - 1) * opts.count : 0
+		const end = opts.page > 0 ? begin + opts.count : ids.length
+
+		return this.items(ids.slice(begin, end))
 	}
 
 	_fetch(param) {
@@ -118,7 +111,10 @@ class HNFirebase {
 			count: 50
 		}, opts)
 
-		return this._fetchStorie(type, opts)
+		return this._fetchStorie(type, opts).then(items => {
+			items.totalLength = this._cache.length(type)
+			return items
+		})
 	}
 
 	items(ids) {
@@ -177,7 +173,7 @@ class HNFirebase {
 	}
 
 	length(type) {
-		return this._cache.length(type)
+		return new Promise(resolve => resolve(this._cache.length(type)))
 	}
 }
 

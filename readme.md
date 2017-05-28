@@ -42,7 +42,7 @@ Returns firebase service for Hacker News as a single instance
 
 ### stories(type, [options])
 
-Returns stories after fetched and cached with options:
+Returns stories with `totalLength` as an additional info after fetched and cached with options:
 
 - force: true ? returns stories fetch first, else return cached data if it exist
 - page: returns stories in page by count
@@ -66,7 +66,7 @@ Make the service keep listening on the changes of stories. It recommend to use i
 
 ### length(type)
 
-Returns cached items of the type's data
+Returns a length of cached items of the target type
 
 ## License
 

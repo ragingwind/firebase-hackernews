@@ -61,3 +61,10 @@ test('length', async t => {
 
 	t.true(length > 0)
 })
+
+test('total length', async t => {
+	const res = await hackernews().stories('top')
+	const length = await hackernews().length('top')
+
+	t.true(res.totalLength === length)
+})
