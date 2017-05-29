@@ -132,11 +132,8 @@ class HNFirebase {
 			let item = opts.force ? undefined : this._cache.cached(id)
 			return item ? Promise.resolve(item) : this._fetch(`item/${id}`)
 		})).then(items => {
-			return items.reduce((res, item, i) => {
-				this._cache.set('items', item)
-				res.push(items[i])
-				return res
-			}, [])
+			items.forEach(i => this._cache.set('items', i))
+			return items
 		})
 	}
 
