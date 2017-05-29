@@ -32,7 +32,7 @@ class HNFirebaseCache {
 		if (Array.isArray(this.data[type])) {
 			this.data[type] = val
 		} else if (typeof this.data[type] === 'object') {
-			this.data[type] = Object.assign(val, this.data[type])
+			this.data[type][val.id] = val
 		} else {
 			throw new Error(`Unsupported type ${type}`)
 		}
@@ -57,6 +57,12 @@ class HNFirebaseCache {
 		return Array.isArray(this.data[type]) ?
 			this.data[type].length :
 			Object.keys(this.data[type]).length
+	}
+
+	cached(id) {
+		// @todo: we need to check timestamp
+		// console.log('data', this.data.items[id])
+		return this.data.items[id]
 	}
 }
 
@@ -117,19 +123,21 @@ class HNFirebase {
 		})
 	}
 
-	items(ids) {
+	items(ids, opts = {force: false}) {
 		if (!Array.isArray(ids)) {
 			ids = [ids]
 		}
 
-		return Promise.all(ids.map(id => this._fetch(`item/${id}`)))
-			.then(items => {
-				this._cache.set('items', items)
-				return items.reduce((res, item, i) => {
-					res.push(items[i])
-					return res
-				}, [])
-			})
+		return Promise.all(ids.map(id => {
+			let item = opts.force ? undefined : this._cache.cached(id)
+			return item ? Promise.resolve(item) : this._fetch(`item/${id}`)
+		})).then(items => {
+			return items.reduce((res, item, i) => {
+				this._cache.set('items', item)
+				res.push(items[i])
+				return res
+			}, [])
+		})
 	}
 
 	user(id, opts = {force: false}) {
@@ -140,7 +148,7 @@ class HNFirebase {
 
 		return Promise.resolve(opts.force ? false : this._cache.exist('users'))
 			.then(cached => Promise.resolve(cached ? true : fetch()))
-			.then(() => this._cache.get('users'))
+			.then(() => this._cache.get('users')[id])
 	}
 
 	maxItem() {
