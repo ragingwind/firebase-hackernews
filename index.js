@@ -61,7 +61,6 @@ class HNFirebaseCache {
 
 	cached(id) {
 		// @todo: we need to check timestamp
-		// console.log('data', this.data.items[id])
 		return this.data.items[id]
 	}
 }
@@ -179,6 +178,22 @@ class HNFirebase {
 
 	length(type) {
 		return new Promise(resolve => resolve(this._cache.length(type)))
+	}
+
+	kids(id) {
+		const travelKids = ids => {
+			if (ids && ids.length > 0) {
+				return this.items(ids).then(items => Promise.all(
+					items.map(i => travelKids(i.kids))
+				))
+			}
+		}
+
+		return travelKids(this._cache.cached(id).kids)
+	}
+
+	cached(id) {
+		return this._cache.cached(id)
 	}
 }
 

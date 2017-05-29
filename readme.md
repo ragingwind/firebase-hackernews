@@ -48,6 +48,12 @@ Returns stories with `totalLength` as an additional info after fetched and cache
 - page: returns stories in page by count
 - count: count in a page. default is 50
 
+### items(ids, [options])
+
+Returns items by id[s] after fetched and cached with options:
+
+- force: true ? returns stories cache first, else return cached data after fetch
+
 ### user(id)
 
 Returns profile by id
@@ -67,6 +73,14 @@ Make the service keep listening on the changes of stories. It recommend to use i
 ### length(type)
 
 Returns a length of cached items of the target type
+
+### kids(id)
+
+Cached all of items related to the target id. Watch out there are no returs
+
+## cached(id)
+
+Only returns a cached item
 
 ## License
 

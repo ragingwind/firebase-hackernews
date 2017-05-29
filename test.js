@@ -68,3 +68,12 @@ test('total length', async t => {
 
 	t.true(res.totalLength === length)
 })
+
+test('kids', async t => {
+	const res = await hackernews().stories('top')
+	await hackernews().kids(res[1].id)
+
+	res[1].kids.forEach(id => {
+		t.true(hackernews().cached(id).id !== undefined)
+	})
+})
