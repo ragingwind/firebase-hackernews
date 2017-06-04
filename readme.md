@@ -40,7 +40,7 @@ hackernews().update().then(update => {})
 
 Returns firebase service for Hacker News as a single instance
 
-### stories(type, [options])
+### stories(type, [options]) / storiesSync(type, [options])
 
 Returns stories with `totalLength` as an additional info after fetched and cached with options:
 
@@ -48,7 +48,7 @@ Returns stories with `totalLength` as an additional info after fetched and cache
 - page: returns stories in page by count
 - count: count in a page. default is 50
 
-### items(ids, [options])
+### items(id[s], [options]) / itemhSync(id[s], [options])
 
 Returns items by id[s] after fetched and cached with options:
 
@@ -70,7 +70,7 @@ Returnes max item id of latest snapshot on firebase
 
 Make the service keep listening on the changes of stories. It recommend to use it for desktop application and server side. refer to [the example with express.js](./examples/express)
 
-### length(type)
+### length(type) / lengthSync(type)
 
 Returns a length of cached items of the target type
 
@@ -78,9 +78,15 @@ Returns a length of cached items of the target type
 
 Cached all of items related to the target id. Watch out there are no returs
 
-## cached(id)
+## cached(id) 
+
+**WILL BE DEPRECATED IN FAVOUR OF ItemSync**
 
 Only returns a cached item
+
+## data(?data)
+
+Set data to cache directly. It's useful when it comes to hydrate / serialis cache
 
 ## License
 

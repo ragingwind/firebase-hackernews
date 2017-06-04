@@ -63,6 +63,14 @@ class HNFirebaseCache {
 		// @todo: we need to check timestamp
 		return this.data.items[id]
 	}
+
+	data(data) {
+		if (data) {
+			this.data = data
+		}
+
+		return this.data
+	}
 }
 
 const STORIES = ['top', 'new', 'best', 'ask', 'show', 'job']
@@ -144,6 +152,10 @@ class HNFirebase {
 	}
 
 	itemsSync(ids) {
+		if (!Array.isArray(ids)) {
+			ids = [ids]
+		}
+
 		return ids.map(id => {
 			return this._cache.cached(id)
 		}).filter(item => item !== undefined)
@@ -211,6 +223,14 @@ class HNFirebase {
 
 	cached(id) {
 		return this._cache.cached(id)
+	}
+
+	dataSync(data) {
+		return this._cache.data(data)
+	}
+
+	data(data) {
+		return this._cache.data(data)
 	}
 }
 
