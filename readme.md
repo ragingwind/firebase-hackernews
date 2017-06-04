@@ -48,7 +48,7 @@ Returns stories with `totalLength` as an additional info after fetched and cache
 - page: returns stories in page by count
 - count: count in a page. default is 50
 
-### items(id[s], [options]) / itemhSync(id[s], [options])
+### items(id[s], [options]) / itemSync(id[s], [options])
 
 Returns items by id[s] after fetched and cached with options:
 
@@ -78,15 +78,9 @@ Returns a length of cached items of the target type
 
 Cached all of items related to the target id. Watch out there are no returs
 
-## cached(id) 
+## data([data]) / dataSync([data])
 
-**WILL BE DEPRECATED IN FAVOUR OF ItemSync**
-
-Only returns a cached item
-
-## data(?data)
-
-Set data to cache directly. It's useful when it comes to hydrate / serialis cache
+Set and get data to cache directly. It's useful when it comes to hydrate / serialis cache
 
 ## License
 
