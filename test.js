@@ -82,3 +82,10 @@ test('kids', async t => {
 		t.true(hackernews().cached(id).id !== undefined)
 	})
 })
+
+test('sync apis', async t => {
+	const res = await hackernews().stories('top')
+	const stories = hackernews().storiesSync('top')
+
+	t.deepEqual(res, stories)
+})
