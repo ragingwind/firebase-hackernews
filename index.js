@@ -112,8 +112,8 @@ class HNFirebase {
 
 		opts = Object.assign({
 			force: false,
-			page: 0,
-			count: 50
+			page: 1,
+			count: 30
 		}, opts)
 
 		return this._fetchStorie(type, opts).then(items => {
