@@ -12,7 +12,7 @@ class HNFirebaseCache {
 	}
 
 	reset() {
-		this.data = {
+		this._data = {
 			items: {},
 			top: [],
 			new: [],
@@ -25,14 +25,14 @@ class HNFirebaseCache {
 	}
 
 	touch(type) {
-		this.data[type]._updated = stamp()
+		this._data[type]._updated = stamp()
 	}
 
 	set(type, val) {
-		if (Array.isArray(this.data[type])) {
-			this.data[type] = val
-		} else if (typeof this.data[type] === 'object') {
-			this.data[type][val.id] = val
+		if (Array.isArray(this._data[type])) {
+			this._data[type] = val
+		} else if (typeof this._data[type] === 'object') {
+			this._data[type][val.id] = val
 		} else {
 			throw new Error(`Unsupported type ${type}`)
 		}
@@ -41,35 +41,35 @@ class HNFirebaseCache {
 	}
 
 	get(type) {
-		return this.data[type]
+		return this._data[type]
 	}
 
 	exist(type) {
-		if (Array.isArray(this.data[type])) {
-			return this.data[type].length > 0
-		} else if (typeof this.data[type] === 'object') {
-			return Object.keys(this.data[type]) > 0
+		if (Array.isArray(this._data[type])) {
+			return this._data[type].length > 0
+		} else if (typeof this._data[type] === 'object') {
+			return Object.keys(this._data[type]) > 0
 		}
 		throw new Error(`Unsupported type ${type}`)
 	}
 
 	length(type) {
-		return Array.isArray(this.data[type]) ?
-			this.data[type].length :
-			Object.keys(this.data[type]).length
+		return Array.isArray(this._data[type]) ?
+			this._data[type].length :
+			Object.keys(this._data[type]).length
 	}
 
 	cached(id) {
 		// @todo: we need to check timestamp
-		return this.data.items[id]
+		return this._data.items[id]
 	}
 
 	data(data) {
 		if (data) {
-			this.data = data
+			this._data = data
 		}
 
-		return this.data
+		return this._data
 	}
 }
 
@@ -123,7 +123,7 @@ class HNFirebase {
 			return new Error(`Invalid type of stories ${type}`)
 		}
 
-		this._getItems(type, opts, this._defaultOption(opts), true)
+		return this._getItems(type, this._defaultOption(opts), true)
 	}
 
 	_getItems(type, opts, sync) {
