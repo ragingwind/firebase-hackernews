@@ -222,6 +222,7 @@ class HNFirebase {
 	}
 
 	cached(id) {
+		console.error('cached method will be deprecated in favour of itemsSync')
 		return this._cache.cached(id)
 	}
 
