@@ -12,7 +12,7 @@ class HNFirebaseCache {
 	}
 
 	reset() {
-		this.data = {
+		this._data = {
 			items: {},
 			top: [],
 			new: [],
@@ -25,14 +25,14 @@ class HNFirebaseCache {
 	}
 
 	touch(type) {
-		this.data[type]._updated = stamp()
+		this._data[type]._updated = stamp()
 	}
 
 	set(type, val) {
-		if (Array.isArray(this.data[type])) {
-			this.data[type] = val
-		} else if (typeof this.data[type] === 'object') {
-			this.data[type][val.id] = val
+		if (Array.isArray(this._data[type])) {
+			this._data[type] = val
+		} else if (typeof this._data[type] === 'object') {
+			this._data[type][val.id] = val
 		} else {
 			throw new Error(`Unsupported type ${type}`)
 		}
@@ -41,27 +41,35 @@ class HNFirebaseCache {
 	}
 
 	get(type) {
-		return this.data[type]
+		return this._data[type]
 	}
 
 	exist(type) {
-		if (Array.isArray(this.data[type])) {
-			return this.data[type].length > 0
-		} else if (typeof this.data[type] === 'object') {
-			return Object.keys(this.data[type]) > 0
+		if (Array.isArray(this._data[type])) {
+			return this._data[type].length > 0
+		} else if (typeof this._data[type] === 'object') {
+			return Object.keys(this._data[type]) > 0
 		}
 		throw new Error(`Unsupported type ${type}`)
 	}
 
 	length(type) {
-		return Array.isArray(this.data[type]) ?
-			this.data[type].length :
-			Object.keys(this.data[type]).length
+		return Array.isArray(this._data[type]) ?
+			this._data[type].length :
+			Object.keys(this._data[type]).length
 	}
 
 	cached(id) {
 		// @todo: we need to check timestamp
-		return this.data.items[id]
+		return this._data.items[id]
+	}
+
+	data(data) {
+		if (data) {
+			this._data = data
+		}
+
+		return this._data
 	}
 }
 
@@ -75,12 +83,11 @@ class HNFirebase {
 		this._cache = new HNFirebaseCache()
 	}
 
-	_getItems(type, opts) {
-		const ids = this._cache.get(type)
-		const begin = opts.page > 0 ? (opts.page - 1) * opts.count : 0
-		const end = opts.page > 0 ? begin + opts.count : ids.length
-
-		return this.items(ids.slice(begin, end))
+	_defaultOption(opts, more) {
+		return Object.assign({
+			page: 1,
+			count: 30
+		}, more, opts)
 	}
 
 	_fetch(param) {
@@ -94,7 +101,13 @@ class HNFirebase {
 		})
 	}
 
-	_fetchStorie(type, opts) {
+	stories(type, opts) {
+		if (!STORIES.includes(type)) {
+			return new Error(`Invalid type of stories ${type}`)
+		}
+
+		opts = this._defaultOption(opts, {force: false})
+
 		const fetch = () => {
 			return this._fetch(`${type}stories`)
 				.then(items => this._cache.set(type, items))
@@ -105,21 +118,15 @@ class HNFirebase {
 			.then(() => this._getItems(type, opts))
 	}
 
-	stories(type, opts) {
-		if (!STORIES.includes(type)) {
-			return new Error(`Invalid type of stories ${type}`)
-		}
+	_getItems(type, opts, sync) {
+		const ids = this._cache.get(type)
+		const begin = opts.page > 0 ? (opts.page - 1) * opts.count : 0
+		const end = opts.page > 0 ? begin + opts.count : ids.length
+		const items = ids.slice(begin, end)
 
-		opts = Object.assign({
-			force: false,
-			page: 1,
-			count: 30
-		}, opts)
-
-		return this._fetchStorie(type, opts).then(items => {
-			items.totalLength = this._cache.length(type)
-			return items
-		})
+		return sync === true ?
+			this.itemsCached(items, opts) :
+			this.items(items, opts)
 	}
 
 	items(ids, opts = {force: false}) {
@@ -193,7 +200,38 @@ class HNFirebase {
 	}
 
 	cached(id) {
+		console.error('cached method will be deprecated in favour of itemsCached')
 		return this._cache.cached(id)
+	}
+
+	data(data) {
+		return new Promise(resolve => resolve(this._cache.data(data)))
+	}
+
+	itemsCached(ids) {
+		if (!Array.isArray(ids)) {
+			ids = [ids]
+		}
+
+		return ids.map(id => {
+			return this._cache.cached(id)
+		}).filter(item => item !== undefined)
+	}
+
+	storiesCached(type, opts) {
+		if (!STORIES.includes(type)) {
+			return new Error(`Invalid type of stories ${type}`)
+		}
+
+		return this._getItems(type, this._defaultOption(opts), true)
+	}
+
+	lengthCached(type) {
+		return this._cache.length(type)
+	}
+
+	dataCached(data) {
+		return this._cache.data(data)
 	}
 }
 

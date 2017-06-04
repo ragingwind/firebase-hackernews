@@ -32,6 +32,11 @@ hackernews().maxItem().then(update => {})
 
 // get a updated items and profiles
 hackernews().update().then(update => {})
+
+// sync api doesn't do fetch it only works on cached data
+// that means asynchronous apis alreay has been called
+hackernews().storiesCached('top').then(stories => {})
+
 ```
 
 ## API
@@ -40,7 +45,9 @@ hackernews().update().then(update => {})
 
 Returns firebase service for Hacker News as a single instance
 
-### stories(type, [options])
+### APIs for Promise
+
+#### stories(type, [options])
 
 Returns stories with `totalLength` as an additional info after fetched and cached with options:
 
@@ -48,39 +55,47 @@ Returns stories with `totalLength` as an additional info after fetched and cache
 - page: returns stories in page by count
 - count: count in a page. default is 50
 
-### items(ids, [options])
+#### items(id[s], [options])
 
 Returns items by id[s] after fetched and cached with options:
 
 - force: true ? returns stories cache first, else return cached data after fetch
 
-### user(id)
+#### user(id)
 
 Returns profile by id
 
-### updates()
+#### updates()
 
 Returns recent updates regardless fetched data
 
-### maxItem()
+#### maxItem()
 
 Returnes max item id of latest snapshot on firebase
 
-### watch()
+#### watch()
 
 Make the service keep listening on the changes of stories. It recommend to use it for desktop application and server side. refer to [the example with express.js](./examples/express)
 
-### length(type)
+#### length(type)
 
 Returns a length of cached items of the target type
 
-### kids(id)
+#### kids(id)
 
 Cached all of items related to the target id. Watch out there are no returs
 
-## cached(id)
+#### data([data])
 
-Only returns a cached item
+Set and get data to cache directly. It's useful when it comes to hydrate / serialis cache
+
+### APIs for cached data
+
+#### storiesCached
+
+#### itemsCached
+
+#### dataCached
 
 ## License
 
