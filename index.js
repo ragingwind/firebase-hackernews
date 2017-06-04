@@ -75,12 +75,11 @@ class HNFirebase {
 		this._cache = new HNFirebaseCache()
 	}
 
-	_getItems(type, opts) {
-		const ids = this._cache.get(type)
-		const begin = opts.page > 0 ? (opts.page - 1) * opts.count : 0
-		const end = opts.page > 0 ? begin + opts.count : ids.length
-
-		return this.items(ids.slice(begin, end))
+	_defaultOption(opts, more) {
+		return Object.assign({
+			page: 1,
+			count: 30
+		}, more, opts)
 	}
 
 	_fetch(param) {
@@ -94,7 +93,13 @@ class HNFirebase {
 		})
 	}
 
-	_fetchStorie(type, opts) {
+	stories(type, opts) {
+		if (!STORIES.includes(type)) {
+			return new Error(`Invalid type of stories ${type}`)
+		}
+
+		opts = this._defaultOption(opts, {force: false})
+
 		const fetch = () => {
 			return this._fetch(`${type}stories`)
 				.then(items => this._cache.set(type, items))
@@ -105,21 +110,23 @@ class HNFirebase {
 			.then(() => this._getItems(type, opts))
 	}
 
-	stories(type, opts) {
+	storiesSync(type, opts) {
 		if (!STORIES.includes(type)) {
 			return new Error(`Invalid type of stories ${type}`)
 		}
 
-		opts = Object.assign({
-			force: false,
-			page: 1,
-			count: 30
-		}, opts)
+		this._getItems(type, opts, this._defaultOption(opts), true)
+	}
 
-		return this._fetchStorie(type, opts).then(items => {
-			items.totalLength = this._cache.length(type)
-			return items
-		})
+	_getItems(type, opts, sync) {
+		const ids = this._cache.get(type)
+		const begin = opts.page > 0 ? (opts.page - 1) * opts.count : 0
+		const end = opts.page > 0 ? begin + opts.count : ids.length
+		const items = ids.slice(begin, end)
+
+		return sync === true ?
+			this.itemsSync(items, opts) :
+			this.items(items, opts)
 	}
 
 	items(ids, opts = {force: false}) {
@@ -134,6 +141,12 @@ class HNFirebase {
 			items.forEach(i => this._cache.set('items', i))
 			return items
 		})
+	}
+
+	itemsSync(ids) {
+		return ids.map(id => {
+			return this._cache.cached(id)
+		}).filter(item => item !== undefined)
 	}
 
 	user(id, opts = {force: false}) {
@@ -178,6 +191,10 @@ class HNFirebase {
 
 	length(type) {
 		return new Promise(resolve => resolve(this._cache.length(type)))
+	}
+
+	lengthSync(type) {
+		return this._cache.length(type)
 	}
 
 	kids(id) {

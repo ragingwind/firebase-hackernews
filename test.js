@@ -1,7 +1,12 @@
 import test from 'ava'
 import hackernews from './'
 
-test('stroies', async t => {
+test('top', async t => {
+	const res = await hackernews().stories('top')
+	t.true(res.length > 0, 'returns resultful value')
+})
+
+test('stories', async t => {
 	await Promise.all(['top', 'new', 'best', 'ask', 'show', 'job'].map(type => {
 		return new Promise(async resolve => {
 			const res = await hackernews().stories(type)
@@ -63,10 +68,10 @@ test('length', async t => {
 })
 
 test('total length', async t => {
-	const res = await hackernews().stories('top')
+	await hackernews().stories('top')
 	const length = await hackernews().length('top')
 
-	t.true(res.totalLength === length)
+	t.true(length === 500)
 })
 
 test('kids', async t => {
