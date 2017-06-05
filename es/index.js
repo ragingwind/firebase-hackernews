@@ -78,6 +78,7 @@ class HNFirebase {
 	constructor() {
 		this._app = firebase.initializeApp({databaseURL: HN_DATABASE_URL}, 'other')
 		this._database = this._app.database()
+		this._app.database().enableLogging(true)
 		this._cache = new HNFirebaseCache()
 	}
 
