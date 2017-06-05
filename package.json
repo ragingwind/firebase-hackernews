@@ -1,6 +1,6 @@
 {
   "name": "firebase-hackernews",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Hacker News APIs with firebase",
   "license": "MIT",
   "repository": "ragingwind/firebase-hackernews",
@@ -10,11 +10,11 @@
     "url": "ragingwind.me"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=4"
   },
   "scripts": {
     "test": "xo *.js && ava test.js",
-    "prepublishOnly": "babel ./es/index.js --out-file ./index.js:w"
+    "prepublishOnly": "babel ./es/index.js -o ./index.js --presets=es2015"
   },
   "files": [
     "index.js",
@@ -34,6 +34,7 @@
   "devDependencies": {
     "ava": "^0.17.0",
     "babel-cli": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
     "express": "^4.15.3",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
