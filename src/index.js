@@ -1,3 +1,5 @@
+'use strict'
+
 const firebase = require('firebase')
 const HNFirebase = require('./hn-firebase')
 
