@@ -13,8 +13,11 @@
     "node": ">=4"
   },
   "scripts": {
-    "test": "xo ./es/*.js && ava test.js",
-    "prepublishOnly": "babel ./es/index.js -o ./index.js --presets=es2015"
+    "test": "xo ./src/*.js && ava test.js",
+    "build:hn": "babel ./src/hn-firebase.js -o ./hn-firebase.js --presets=es2015",
+    "build:es": "mkdir -p es && babel ./src/es/index.js -o ./es/index.js --presets=es2015",
+    "build": "babel ./src/index.js -o ./index.js --presets=es2015",
+    "prepublishOnly": "npm run build:hn && npm run build:es && npm run build"
   },
   "files": [
     "index.js",
