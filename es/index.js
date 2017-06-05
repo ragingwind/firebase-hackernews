@@ -1,6 +1,5 @@
-'use strict'
-
-const Firebase = require('firebase')
+import firebase from 'firebase'
+import _ from 'firebase/database'
 
 const HN_DATABASE_URL = 'https://hacker-news.firebaseio.com'
 const HN_VERSION = 'v0'
@@ -77,9 +76,8 @@ const STORIES = ['top', 'new', 'best', 'ask', 'show', 'job']
 
 class HNFirebase {
 	constructor() {
-		Firebase.initializeApp({databaseURL: HN_DATABASE_URL})
-
-		this._database = Firebase.database()
+		this._app = firebase.initializeApp({databaseURL: HN_DATABASE_URL}, 'other')
+		this._database = this._app.database()
 		this._cache = new HNFirebaseCache()
 	}
 
@@ -92,7 +90,7 @@ class HNFirebase {
 
 	_fetch(param) {
 		return new Promise((resolve, reject) => {
-			this._database.ref(`${HN_VERSION}/${param}`).once('value', s => {
+			this._app.database().ref(`${HN_VERSION}/${param}`).once('value', s => {
 				resolve(s.val())
 			}).catch(err => {
 				console.error(err)
@@ -110,7 +108,9 @@ class HNFirebase {
 
 		const fetch = () => {
 			return this._fetch(`${type}stories`)
-				.then(items => this._cache.set(type, items))
+				.then(items => {
+					this._cache.set(type, items)
+				})
 		}
 
 		return Promise.resolve(opts.force ? false : this._cache.exist(type))
@@ -235,7 +235,7 @@ class HNFirebase {
 	}
 }
 
-module.exports = (function () {
+export default (function () {
 	let _app
 
 	function createService(opts) {

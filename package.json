@@ -13,7 +13,7 @@
     "node": ">=4"
   },
   "scripts": {
-    "test": "xo *.js && ava test.js",
+    "test": "xo ./es/*.js && ava test.js",
     "prepublishOnly": "babel ./es/index.js -o ./index.js --presets=es2015"
   },
   "files": [
