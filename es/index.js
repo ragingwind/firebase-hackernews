@@ -1,5 +1,5 @@
-import firebase from 'firebase'
-import _ from 'firebase/database'
+import firebase from 'firebase/app'
+import _ from 'firebase/database-node'
 
 const HN_DATABASE_URL = 'https://hacker-news.firebaseio.com'
 const HN_VERSION = 'v0'
@@ -90,7 +90,7 @@ class HNFirebase {
 
 	_fetch(param) {
 		return new Promise((resolve, reject) => {
-			this._app.database().ref(`${HN_VERSION}/${param}`).once('value', s => {
+			this._database.ref(`${HN_VERSION}/${param}`).once('value', s => {
 				resolve(s.val())
 			}).catch(err => {
 				console.error(err)
