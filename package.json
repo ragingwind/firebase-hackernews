@@ -14,7 +14,7 @@
   },
   "scripts": {
     "test": "xo *.js && ava test.js",
-    "prepublishOnly": "babel ./es/index.js --out-file ./index.js:w"
+    "prepublishOnly": "babel ./es/index.js --out-file ./index.js"
   },
   "files": [
     "index.js",
