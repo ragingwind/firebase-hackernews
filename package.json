@@ -21,6 +21,7 @@
   },
   "files": [
     "index.js",
+    "hn-firebase.js",
     "es/indexjs"
   ],
   "keywords": [
