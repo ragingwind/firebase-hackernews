@@ -10,13 +10,15 @@
     "url": "ragingwind.me"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=6"
   },
   "scripts": {
-    "test": "xo *.js && ava test.js"
+    "test": "xo *.js && ava test.js",
+    "prepublishOnly": "babel ./es/index.js --out-file ./index.js:w"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "es/indexjs"
   ],
   "keywords": [
     "firebase",
@@ -31,6 +33,7 @@
   },
   "devDependencies": {
     "ava": "^0.17.0",
+    "babel-cli": "^6.24.1",
     "express": "^4.15.3",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
