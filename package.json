@@ -1,6 +1,6 @@
 {
   "name": "firebase-hackernews",
-  "version": "0.12.2",
+  "version": "0.12.3",
   "description": "Hacker News APIs with firebase",
   "license": "MIT",
   "repository": "ragingwind/firebase-hackernews",
