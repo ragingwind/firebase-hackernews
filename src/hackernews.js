@@ -185,22 +185,29 @@ class Hackernews {
 	}
 
 	kids(id) {
-		const res = {}
-		const travelKids = ids => {
-			if (ids && ids.length > 0) {
-				return this.items(ids).then(items => {
-					return Promise.all(
-						items.map(i => {
-							res[i.by] = i
-							return travelKids(i.kids)
-						})
-					)
-				})
+		return new Promise(resolve => {
+			const res = {}
+			const travelKids = ids => {
+				if (ids && ids.length > 0) {
+					return this.items(ids).then(items => {
+						return Promise.all(
+							items.map(i => {
+								res[i.by] = i
+								return travelKids(i.kids)
+							})
+						)
+					})
+				}
 			}
-		}
 
-		return travelKids(this._cache.cached(id).kids).then(() => {
-			return res
+			if (!this._cache.cached(id)) {
+				resolve(res)
+				return
+			}
+
+			travelKids(this._cache.cached(id).kids).then(() => {
+				resolve(res)
+			})
 		})
 	}
 
@@ -233,18 +240,26 @@ class Hackernews {
 	dataCached(data) {
 		return this._cache.data(data)
 	}
+
+	fetch(pathname) {
+		return new Promise((resolve, reject) => {
+			const subpath = pathname.replace('/hackernews/', '').split('/')
+			const type = subpath[0]
+			const param = subpath[1]
+
+			if (type === 'user' && param) {
+				return this.user(param).then(resolve)
+			} else if (type === 'item' && param) {
+				return this.items(param && param).then(resolve)
+			} else if (type === 'kids' && param) {
+				return this.kids(param).then(resolve)
+			} else if (/top|new|best|ask|show|job/.test(type)) {
+				return this.stories(type, {page: param || 1}).then(resolve)
+			}
+
+			reject(new Error(`invalid type: ${type}, or params: ${param}`))
+		})
+	}
 }
 
-module.exports = (function () {
-	let _app
-
-	function createService(opts) {
-		if (!_app)	{
-			_app = new Hackernews(opts)
-		}
-
-		return _app
-	}
-
-	return createService
-})()
+export default Hackernews
