@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title></title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body>
+	<h1>hackernews sw</h1>
+	<ul id="stories"></ul>
+	<script>
+	if ('serviceWorker' in navigator) {
+		navigator.serviceWorker.addEventListener('message', async event => {
+			console.log('ready to use hackernews()', event)
+			if (navigator.serviceWorker.controller) {
+				const ul = document.querySelector('#stories')
+				const add = (text) => {
+					const li =document.createElement('li')
+					li.textContent = text
+					ul.appendChild(li)
+				}
+				const stories = await fetch('./hackernews/top')
+				const storiesRes = await stories.json()
+
+				storiesRes.data.forEach(s => {
+					add(`${s.title} - ${s.by}`)
+				})
+
+				const kids = await fetch('./hackernews/kids/' + storiesRes.data[0].id)
+				const kidsRes = await kids.json()
+
+				Object.keys(kidsRes.data).forEach(k => {
+					const kid = kidsRes.data[k]
+					add(`${kid.text} - ${kid.by}`)
+				})
+			}
+		})
+
+		navigator.serviceWorker
+			.register('service-worker.js', {scope: './'})
+			.then(reg => {
+				console.log('sw is ready')
+			})
+			.catch(err => {
+				console.log('failed', error)
+			})
+	}
+	</script>
+	</body>
+</html>

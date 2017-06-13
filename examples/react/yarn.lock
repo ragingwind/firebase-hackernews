@@ -2462,15 +2462,14 @@ find-up@^2.1.0:
     locate-path "^2.0.0"
 
 "firebase-hackernews@file:../../":
-  version "0.0.0"
+  version "0.12.3"
   dependencies:
-    firebase "^3.9.0"
-    isomorphic-unfetch "^1.0.0"
-    p-if "^1.1.0"
+    babel-register "^6.24.1"
+    firebase "^4.1.2"
 
-firebase@^3.9.0:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/firebase/-/firebase-3.9.0.tgz#c4237f50f58eeb25081b1839d6cbf175f8f7ed9b"
+firebase@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/firebase/-/firebase-4.1.2.tgz#b213ab229eb65e31bdbd1d262059b1bb1edfac1f"
   dependencies:
     dom-storage "^2.0.2"
     faye-websocket "0.9.3"
@@ -3219,13 +3218,6 @@ isomorphic-fetch@^2.1.1:
   dependencies:
     node-fetch "^1.0.1"
     whatwg-fetch ">=0.10.0"
-
-isomorphic-unfetch@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/isomorphic-unfetch/-/isomorphic-unfetch-1.0.0.tgz#aab414b6d764bbd1b8ee6257ad8f1f77e5407574"
-  dependencies:
-    node-fetch "^1.6.3"
-    unfetch "^2.1.0"
 
 isstream@~0.1.2:
   version "0.1.2"
@@ -4014,7 +4006,7 @@ no-case@^2.2.0:
   dependencies:
     lower-case "^1.1.1"
 
-node-fetch@^1.0.1, node-fetch@^1.6.3:
+node-fetch@^1.0.1:
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.6.3.tgz#dc234edd6489982d58e8f0db4f695029abcd8c04"
   dependencies:
@@ -4256,10 +4248,6 @@ osenv@^0.1.0, osenv@^0.1.4:
   dependencies:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
-
-p-if@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/p-if/-/p-if-1.1.0.tgz#ca91fcc077f39cb1d409838a1d121fbd12bb1b32"
 
 p-limit@^1.1.0:
   version "1.1.0"
@@ -5856,10 +5844,6 @@ uglify-to-browserify@~1.0.0:
 uid-number@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/uid-number/-/uid-number-0.0.6.tgz#0ea10e8035e8eb5b8e4449f06da1c730663baa81"
-
-unfetch@^2.1.0:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/unfetch/-/unfetch-2.1.2.tgz#684fee4d8acdb135bdb26c0364c642fc326ca95b"
 
 uniq@^1.0.1:
   version "1.0.1"
