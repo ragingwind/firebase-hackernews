@@ -16,8 +16,9 @@
   "scripts": {
     "test": "xo ./src/*.js && ava test.js",
     "sw": "node examples/service-worker/server.js && webpack --watch",
-    "express": "node examples/exress/server.js && webpack --watch",
+    "express": "node examples/express/server.js && webpack --watch",
     "build": "webpack -p",
+    "dev": "webpack",
     "prepublishOnly": "npm run build"
   },
   "files": [
