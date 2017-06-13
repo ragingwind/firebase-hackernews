@@ -76,6 +76,7 @@ class Hackernews {
 		this._app = firebase.initializeApp({databaseURL: HN_DATABASE_URL}, 'hackernews')
 		this._database = this._app.database()
 		this._cache = new HNCache()
+		this.log = () => {}
 	}
 
 	_defaultOption(opts, more) {
@@ -169,15 +170,15 @@ class Hackernews {
 	}
 
 	watch(on = true) {
-		return new Promise(resolve => {
-			const method = on ? 'on' : 'off'
-			STORIES.forEach(type => {
+		const method = on ? 'on' : 'off'
+		return Promise.all(STORIES.map(type => {
+			return new Promise(resolve => {
 				this._database.ref(`${HN_VERSION}/${type}stories`)[method]('value', s => {
 					this._cache.set(type, s.val())
 					resolve()
 				})
 			})
-		})
+		}))
 	}
 
 	length(type) {
@@ -247,6 +248,7 @@ class Hackernews {
 			const type = subpath[0]
 			const param = subpath[1]
 
+			this.log(`fetch: ${subpath}, ${type}, ${param}`)
 			if (type === 'user' && param) {
 				return this.user(param).then(resolve)
 			} else if (type === 'item' && param) {

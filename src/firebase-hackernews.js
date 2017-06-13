@@ -2,7 +2,7 @@
 
 import Hackernews from './hackernews'
 
-export const init = (function () {
+const init = (function () {
 	let _app
 
 	function createService(firebase) {
@@ -20,4 +20,6 @@ export const init = (function () {
 	return createService
 })()
 
-export default {}
+export default {
+	init
+}

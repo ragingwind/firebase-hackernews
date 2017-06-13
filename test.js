@@ -4,6 +4,15 @@ import hackernews from './'
 
 const hnservice = hackernews.init(firebase)
 
+test('watch', t => {
+	hnservice.watch().then(() => {
+		const data = hnservice.dataCached()
+		t.true(data.top.length > 0)
+	}).catch(err => {
+		t.fail()
+	})
+})
+
 test('top', async t => {
 	const res = await hnservice.stories('top')
 	t.true(res.length > 0, 'returns resultful value')
