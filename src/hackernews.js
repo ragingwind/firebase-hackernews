@@ -192,7 +192,7 @@ class Hackernews {
 					return this.items(ids).then(items => {
 						return Promise.all(
 							items.map(i => {
-								res[i.by] = i
+								res[i.id] = i
 								return travelKids(i.kids)
 							})
 						)
