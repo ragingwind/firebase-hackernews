@@ -82,7 +82,7 @@ This module supports that running on server-worker. After initialzing in service
 /* global importScripts hackernews */
 importScripts('https://www.gstatic.com/firebasejs/4.1.2/firebase-app.js')
 importScripts('https://www.gstatic.com/firebasejs/4.1.2/firebase-database.js')
-importScripts('https://unpkg.com/@^1.0.0firebase-hackernews')
+importScripts('https://unpkg.com/firebase-hackernews@2.1.0')
 
 hackernews.init(firebase, { watch: true })
 ```
