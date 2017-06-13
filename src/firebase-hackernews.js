@@ -2,7 +2,7 @@
 
 import Hackernews from './hackernews'
 
-const init = (function () {
+export const init = (function () {
 	let _app
 
 	function createService(firebase) {
