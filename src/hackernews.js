@@ -2,7 +2,7 @@ const HN_DATABASE_URL = 'https://hacker-news.firebaseio.com'
 const HN_VERSION = 'v0'
 const stamp = () => typeof window === 'object' ? performance.now() : Date.now()
 
-class HNFirebaseCache {
+class HNCache {
 	constructor() {
 		this.reset()
 	}
@@ -30,7 +30,7 @@ class HNFirebaseCache {
 		} else if (typeof this._data[type] === 'object') {
 			this._data[type][val.id] = val
 		} else {
-			throw new Error(`Unsupported type ${type}`)
+			throw new TypeError(`Unsupported type ${type}`)
 		}
 
 		this.touch(type)
@@ -71,11 +71,11 @@ class HNFirebaseCache {
 
 const STORIES = ['top', 'new', 'best', 'ask', 'show', 'job']
 
-class HNFirebase {
+class Hackernews {
 	constructor(firebase) {
 		this._app = firebase.initializeApp({databaseURL: HN_DATABASE_URL}, 'hackernews')
 		this._database = this._app.database()
-		this._cache = new HNFirebaseCache()
+		this._cache = new HNCache()
 	}
 
 	_defaultOption(opts, more) {
@@ -132,7 +132,7 @@ class HNFirebase {
 		}
 
 		return Promise.all(ids.map(id => {
-			let item = opts.force ? undefined : this._cache.cached(id)
+			const item = opts.force ? undefined : this._cache.cached(id)
 			return item ? Promise.resolve(item) : this._fetch(`item/${id}`)
 		})).then(items => {
 			items.forEach(i => this._cache.set('items', i))
@@ -185,20 +185,23 @@ class HNFirebase {
 	}
 
 	kids(id) {
+		const res = {}
 		const travelKids = ids => {
 			if (ids && ids.length > 0) {
-				return this.items(ids).then(items => Promise.all(
-					items.map(i => travelKids(i.kids))
-				))
+				return this.items(ids).then(items => {
+					return Promise.all(
+						items.map(i => {
+							res[i.by] = i
+							return travelKids(i.kids)
+						})
+					)
+				})
 			}
 		}
 
-		return travelKids(this._cache.cached(id).kids)
-	}
-
-	cached(id) {
-		console.error('cached method will be deprecated in favour of itemsCached')
-		return this._cache.cached(id)
+		return travelKids(this._cache.cached(id).kids).then(() => {
+			return res
+		})
 	}
 
 	data(data) {
@@ -237,7 +240,7 @@ module.exports = (function () {
 
 	function createService(opts) {
 		if (!_app)	{
-			_app = new HNFirebase(opts)
+			_app = new Hackernews(opts)
 		}
 
 		return _app

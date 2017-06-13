@@ -1,15 +1,18 @@
+import firebase from 'firebase'
 import test from 'ava'
 import hackernews from './'
 
+const hnservice = hackernews.init(firebase)
+
 test('top', async t => {
-	const res = await hackernews().stories('top')
+	const res = await hnservice.stories('top')
 	t.true(res.length > 0, 'returns resultful value')
 })
 
 test('stories', async t => {
 	await Promise.all(['top', 'new', 'best', 'ask', 'show', 'job'].map(type => {
 		return new Promise(async resolve => {
-			const res = await hackernews().stories(type)
+			const res = await hnservice.stories(type)
 			t.true(res.length > 0, 'returns resultful value')
 			resolve()
 		})
@@ -19,7 +22,7 @@ test('stories', async t => {
 test('count of default', async t => {
 	await Promise.all(['top', 'new', 'best', 'ask', 'show', 'job'].map(type => {
 		return new Promise(async resolve => {
-			const res = await hackernews().stories(type, {
+			const res = await hnservice.stories(type, {
 				page: 1
 			})
 			t.true(res.length > 0, 'returns resultful value')
@@ -31,7 +34,7 @@ test('count of default', async t => {
 test('count of custom', async t => {
 	await Promise.all(['top', 'new', 'best', 'ask', 'show', 'job'].map(type => {
 		return new Promise(async resolve => {
-			const res = await hackernews().stories(type, {
+			const res = await hnservice.stories(type, {
 				page: 1,
 				count: 10
 			})
@@ -42,50 +45,50 @@ test('count of custom', async t => {
 })
 
 test('user', async t => {
-	const user = await hackernews().user('jl')
+	const user = await hnservice.user('jl')
 
 	t.true(user.about === 'This is a test')
 	t.true(user.id === 'jl')
 })
 
 test('maxitem', async t => {
-	const maxItem = await hackernews().maxItem()
+	const maxItem = await hnservice.maxItem()
 	t.true(maxItem > 0, 'returns resultful value')
 })
 
 test('updates', async t => {
-	const res = await hackernews().update()
+	const res = await hnservice.update()
 
 	t.true(res.items.length > 0)
 	t.true(res.profiles.length > 0)
 })
 
 test('length', async t => {
-	await hackernews().stories('top')
-	const length = await hackernews().length('top')
+	await hnservice.stories('top')
+	const length = await hnservice.length('top')
 
 	t.true(length > 0)
 })
 
 test('total length', async t => {
-	await hackernews().stories('top')
-	const length = await hackernews().length('top')
+	await hnservice.stories('top')
+	const length = await hnservice.length('top')
 
-	t.true(length === 500)
+	t.true(length >= 400)
 })
 
 test('kids', async t => {
-	const res = await hackernews().stories('top')
-	await hackernews().kids(res[1].id)
+	const res = await hnservice.stories('top')
+	await hnservice.kids(res[1].id)
 
 	res[1].kids.forEach(id => {
-		t.true(hackernews().cached(id).id !== undefined)
+		t.true(hnservice.itemsCached(id)[0].id !== undefined)
 	})
 })
 
 test('cached apis', async t => {
-	const live = await hackernews().stories('top')
-	const cached = hackernews().storiesCached('top')
+	const live = await hnservice.stories('top')
+	const cached = hnservice.storiesCached('top')
 
 	t.deepEqual(live, cached)
 })
