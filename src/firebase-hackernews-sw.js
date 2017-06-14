@@ -10,7 +10,8 @@ const init = (() => {
 
 	return function (firebase, opts) {
 		opts = Object.assign({
-			watch: false
+			watch: false,
+			log: () => {}
 		}, opts)
 
 		opts.log((`hn:sw: passed opts, ${JSON.stringify(opts)}`))
@@ -24,7 +25,6 @@ const init = (() => {
 		self.addEventListener('fetch', event => {
 			const url = new URL(event.request.url)
 
-			opts.log((`hn:sw: fetch, ${url}`))
 			if (url.pathname.startsWith('/hackernews/')) {
 				opts.log((`hn:sw: start hooking of fetch, ${url}`))
 				event.respondWith(hackernews.fetch(url.pathname).then(data => {
