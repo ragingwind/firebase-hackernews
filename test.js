@@ -2,7 +2,9 @@ import firebase from 'firebase'
 import test from 'ava'
 import hackernews from './'
 
-const hnservice = hackernews.init(firebase)
+const hnservice = hackernews.init(firebase, {
+	log: console.log
+})
 
 test('watch', t => {
 	hnservice.watch().then(() => {
@@ -102,8 +104,15 @@ test('cached apis', async t => {
 	t.deepEqual(live, cached)
 })
 
-test('fetch totalLength', async t => {
+test('fetch', async t => {
 	const data = await hnservice.fetch('/hackernews/top')
 
 	t.true(data.length > 0, 'returns resultful value')
+})
+
+test('fetch length', async t => {
+	const data = await hnservice.fetch('/hackernews/top')
+	const len = await hnservice.fetch('/hackernews/length/top')
+
+	t.true(len > 0)
 })

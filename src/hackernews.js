@@ -254,7 +254,7 @@ class Hackernews {
 			const type = subpath[0]
 			const param = subpath[1]
 
-			this.log(`hn:fetch: ${pathname}, ${subpath}`)
+			this.log(`hn:fetch: ${pathname}, ${subpath}, ${type}, ${param}`)
 
 			if (type === 'user' && param) {
 				return this.user(param).then(resolve)
@@ -262,6 +262,8 @@ class Hackernews {
 				return this.items(param && param).then(resolve)
 			} else if (type === 'kids' && param) {
 				return this.kids(param).then(resolve)
+			} else if (type === 'length' && param) {
+				return this.length(param).then(resolve)
 			} else if (/top|new|best|ask|show|job/.test(type)) {
 				return this.stories(type, {page: param || 1}).then(resolve)
 			}
