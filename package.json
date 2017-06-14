@@ -14,7 +14,7 @@
   },
   "main": "./dist/firebase-hackernews",
   "scripts": {
-    "test": "xo ./src/*.js && ava test.js",
+    "test": "xo ./src/*.js && yarn dev && ava test.js",
     "sw": "node examples/service-worker/server.js && webpack --watch",
     "express": "node examples/express/server.js && webpack --watch",
     "build": "webpack -p",

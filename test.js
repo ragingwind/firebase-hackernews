@@ -101,3 +101,10 @@ test('cached apis', async t => {
 
 	t.deepEqual(live, cached)
 })
+
+test('fetch totalLength', async t => {
+	const data = await hnservice.fetch('/hackernews/top')
+	const totalLength = hnservice.lengthCached('top')
+
+	t.true(data.totalLength === totalLength)
+})

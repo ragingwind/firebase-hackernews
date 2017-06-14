@@ -263,7 +263,10 @@ class Hackernews {
 			} else if (type === 'kids' && param) {
 				return this.kids(param).then(resolve)
 			} else if (/top|new|best|ask|show|job/.test(type)) {
-				return this.stories(type, {page: param || 1}).then(resolve)
+				return this.stories(type, {page: param || 1}).then(story => {
+					story.totalLength = this.lengthCached(type)
+					resolve(story)
+				})
 			}
 
 			reject(new Error(`invalid type: ${type}, or params: ${param}`))
