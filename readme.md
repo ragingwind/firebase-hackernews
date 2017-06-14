@@ -100,10 +100,19 @@ storiesRes.data.forEach(s => {
 
 ## API
 
-### init
+### init(firebase, [option])
 
 Returns hackernews service powered by firebase as a single instance
 
+```
+{
+	firebase: `firebase package. refer to usage above`
+	options: {
+		watch: `true / false, enable watch mode or not`
+		log: `log function, ex) console.log`
+	}
+}
+```
 ### APIs for Promise
 
 #### stories(type, [options])

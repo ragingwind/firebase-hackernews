@@ -13,7 +13,9 @@ const init = (() => {
 			watch: false
 		}, opts)
 
-		const hackernews = new Hackernews(firebase)
+		opts.log((`hn:sw: passed opts, ${JSON.stringify(opts)}`))
+
+		const hackernews = new Hackernews(firebase, opts)
 
 		self.addEventListener('install', event => event.waitUntil(self.skipWaiting()))
 
@@ -23,25 +25,31 @@ const init = (() => {
 			const url = new URL(event.request.url)
 
 			if (url.pathname.startsWith('/hackernews/')) {
+				opts.log((`hn:sw: start hooking of fetch, ${url}`))
 				event.respondWith(hackernews.fetch(url.pathname).then(data => {
+					opts.log((`hn:sw: end hooking of fetch, ${data}`))
 					return responseWithJSON({data})
 				}))
 			}
 		})
 
-		hackernews.watch(opts.watch).then(() => {
-			self.clients.matchAll({
-				type: 'window',
-				includeUncontrolled: true
-			}).then(clients => {
-				clients.forEach(client => {
-					client.postMessage({
-						target: 'firebase-hackernews-sw',
-						type: 'ready'
+		if (opts.watch) {
+			opts.log((`hn:sw: start watching ${opts.watch}`))
+			hackernews.watch(opts.watch).then(() => {
+				self.clients.matchAll({
+					type: 'window',
+					includeUncontrolled: true
+				}).then(clients => {
+					opts.log((`hn:sw: end watching`))
+					clients.forEach(client => {
+						client.postMessage({
+							target: 'firebase-hackernews-sw',
+							type: 'ready'
+						})
 					})
 				})
 			})
-		})
+		}
 	}
 })()
 

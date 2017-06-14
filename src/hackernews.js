@@ -72,11 +72,15 @@ class HNCache {
 const STORIES = ['top', 'new', 'best', 'ask', 'show', 'job']
 
 class Hackernews {
-	constructor(firebase) {
+	constructor(firebase, opts) {
+		opts = Object.assign({
+			log: () => {}
+		}, opts)
+
 		this._app = firebase.initializeApp({databaseURL: HN_DATABASE_URL}, 'hackernews')
 		this._database = this._app.database()
 		this._cache = new HNCache()
-		this.log = () => {}
+		this.log = opts.log
 	}
 
 	_defaultOption(opts, more) {
@@ -213,6 +217,7 @@ class Hackernews {
 	}
 
 	data(data) {
+		this.log(`hn:data: ${data}`)
 		return new Promise(resolve => resolve(this._cache.data(data)))
 	}
 
@@ -239,6 +244,7 @@ class Hackernews {
 	}
 
 	dataCached(data) {
+		this.log(`hn:dataCached: ${data}`)
 		return this._cache.data(data)
 	}
 
@@ -248,7 +254,8 @@ class Hackernews {
 			const type = subpath[0]
 			const param = subpath[1]
 
-			this.log(`fetch: ${subpath}, ${type}, ${param}`)
+			this.log(`hn:fetch: ${pathname}, ${subpath}`)
+
 			if (type === 'user' && param) {
 				return this.user(param).then(resolve)
 			} else if (type === 'item' && param) {
