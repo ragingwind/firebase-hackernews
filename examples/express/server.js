@@ -13,7 +13,7 @@ const watchmode = process.argv.includes('--watch')
 const index = `
 <ul>
 	<li><a href="/hackernews/top">top</a></li>
-	<li><a href="/hackernews/top/1>top at page 1</a></li>
+	<li><a href="/hackernews/top/1">top at page 1</a></li>
 	<li><a href="/hackernews/new">new</a></li>
 	<li><a href="/hackernews/best">best</a></li>
 	<li><a href="/hackernews/ask">ask</a></li>
