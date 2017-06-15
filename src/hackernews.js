@@ -60,6 +60,10 @@ class HNCache {
 		return this._data.items[id]
 	}
 
+	item(id) {
+		return this._data.items[id]
+	}
+
 	data(data) {
 		if (data) {
 			this._data = data
@@ -205,13 +209,14 @@ class Hackernews {
 				}
 			}
 
-			if (!this._cache.cached(id)) {
-				resolve(res)
-				return
-			}
+			const item = this._cache.item(id)
+			const prepare = item ? Promise.resolve([item]) : this.items(id)
 
-			travelKids(this._cache.cached(id).kids).then(() => {
-				resolve(res)
+			prepare.then(items => {
+				return travelKids(this._cache.cached(items[0].id).kids)
+					.then(() => {
+						resolve(res)
+					})
 			})
 		})
 	}
