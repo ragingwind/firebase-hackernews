@@ -35,7 +35,7 @@ const hackernews = require('firebase-hackernews');
 
 // create a service as a single instance when the fist call
 // you must pass firebase to init method
-const hnservice = hackernews(firebase)
+const hnservice = hackernews.init(firebase)
 ```
 
 Even it can be running with es2015 to support for live-code importing like this below,
@@ -44,7 +44,7 @@ Even it can be running with es2015 to support for live-code importing like this 
 import firebase from 'firebase/app'
 import from 'firebase/database'
 
-const hnservice = hackernews(firebase)
+const hnservice = hackernews.init(firebase)
 ```
 
 ### With Promise
