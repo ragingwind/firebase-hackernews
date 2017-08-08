@@ -1,4 +1,4 @@
-# firebase-hackernews [![Build Status](https://travis-ci.org/ragingwind/firebase-hackernews.svg?branch=master)](https://travis-ci.org/ragingwind/firebase-hackernews)
+# firebase-hackernews
 
 > Hacker News APIs with firebase
 
